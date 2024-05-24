@@ -14,11 +14,16 @@
             <div class="d-flex align-items-center justify-content-center button-icon">
                 <i class="bi bi-geo-alt"></i>
             </div>
-            <p class="mb-0">{{ city }}, {{ country }}</p>
+            <p class="mb-0">{{ forecastData?.city.name }}, {{ forecastData?.city.country }}</p>
         </div>
     </nav>
     <div class="w-25">
-        <input type="text" class="form-control" placeholder="Search City">
+        <form [formGroup]="locationForm" (ngSubmit)="setNewLocation()">
+            <div class="position-relative">
+            <input type="text" class="form-control ps-5" placeholder="Search by zip/postal code" formControlName="location">
+            <button class="btn position-absolute top-0"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
     </div>
     <div>
         <button class="btn btn-primary">color mode</button>

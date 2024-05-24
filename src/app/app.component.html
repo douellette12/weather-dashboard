@@ -1,3 +1,2 @@
-<app-toolbar></app-toolbar>
-<app-forecast></app-forecast>
-<button (click)="getForeCast()">Get Forecast</button>
+<app-toolbar (onLocationChange)="showNewLocation($event)" [forecastData]="forecastData"></app-toolbar>
+<app-forecast [forecastData]="forecastData"></app-forecast>
