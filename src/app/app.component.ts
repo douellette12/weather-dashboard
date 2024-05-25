@@ -4,6 +4,7 @@ import { ForecastComponent } from './components/forecast/forecast.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ForecastService } from './services/forecast.service';
 import { GeocodingService } from './services/geocoding.service';
+import { OverviewComponent } from './components/overview/overview.component';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,8 @@ import { GeocodingService } from './services/geocoding.service';
   imports: [
     RouterOutlet, 
     ForecastComponent, 
-    ToolbarComponent
+    ToolbarComponent,
+    OverviewComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
