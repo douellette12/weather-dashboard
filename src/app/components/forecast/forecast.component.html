@@ -13,13 +13,28 @@
     <div class="col-8 d-flex justify-content-between">
         <div class="card bg-secondary text-dark rounded-5" style="width: 19rem;">
             <div class="card-header bg-info rounded-5 rounded-bottom-0 pt-4 d-flex justify-content-between">
-                <h5 class="fw-bold">{{ date.toLocaleDateString(undefined, {weekday: 'long'}) }}</h5>
-                <h5 class="fw-bold">{{ date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }) }}</h5>
+                <h5 class="fw-bold">{{ date?.toLocaleDateString(undefined, {weekday: 'long'}) }}</h5>
+                <h5 class="fw-bold">{{ date?.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }) }}</h5>
             </div>
             <div class="card-body">
-                <div class="d-flex justify-content-between py-3">
-                    <h1 class="card-title">{{ forecastData?.list[0].main.temp | number : '1.0-0' }}&deg;</h1>
-                    <img src="../../../assets/images/Sunnny Windy Icon 1.svg" alt="">
+                <div class="d-flex justify-content-between py-3 align-items-center">
+                    <h1 class="card-title">{{ forecastData?.list[0].main.temp_min | number : '1.0-0' }}&deg;</h1>
+                    <div *ngIf="forecastData?.list[0].dt < forecastData?.city.sunset; else nightTime">
+                        <div [ngSwitch]="forecastData?.list[0].weather[0].main">
+                            <img *ngSwitchCase="'Clear'" class="img-fluid forecast-icon" src="../../../assets/images/sunny.png" alt="">
+                            <img *ngSwitchCase="'Clouds'" class="img-fluid forecast-icon" src="../../../assets/images/pcloudy.png">
+                            <img *ngSwitchCase="'Thunderstorm'" class="img-fluid forecast-icon" src="../../../assets/images/TStorm.png" alt="">
+                            <img *ngSwitchDefault class="img-fluid forecast-icon" src="../../../assets/images/pcloudy.png">
+                        </div>
+                    </div>
+                    <ng-template #nightTime>
+                        <div [ngSwitch]="forecastData?.list[0].weather[0].main">
+                            <img *ngSwitchCase="'Clear'" class="img-fluid forecast-icon" src="../../../assets/images/moon.png" alt="">
+                            <img *ngSwitchCase="'Clouds'" class="img-fluid forecast-icon" src="../../../assets/images/mcloudy 0.png">
+                            <img *ngSwitchCase="'Thunderstorm'" class="img-fluid forecast-icon" src="../../../assets/images/Tstorm 0.png" alt="">
+                            <img *ngSwitchDefault class="img-fluid forecast-icon" src="../../../assets/images/pcloudy 0.png">
+                        </div>
+                    </ng-template>
                 </div>
                 <div class="mt-2 d-flex justify-content-between align-items-center">
                     <div>
@@ -38,15 +53,29 @@
             </div>
         </div>
         
-        <div *ngFor="let date of datesArray" class="card rounded-5 text-center bg-primary pt-4" style="width: 10rem;">
+        <div *ngFor="let date of futureForecast" class="card rounded-5 text-center bg-primary pt-4" style="width: 10rem;">
             <h5 class="text-uppercase">
-              {{ date.toLocaleDateString(undefined, {weekday: 'short'}) }}
+                {{ date.dt*1000 | date:'E' }}
             </h5>
             <hr>
             <div class="card-body">
-                <img src="../../../assets/images/01_sunny_color_w128.svg" alt="">
-              <h5 class="card-title fw-bold">{{ forecastData?.main?.temp | number : '1.0-0' }}</h5>
-              <h2 class="pt-4">{{ forecastData?.list[0].main.temp | number : '1.0-0'}}&deg;</h2>
+                <div *ngIf="forecastData?.list[0].dt < forecastData?.city.sunset; else nightTime2">
+                <div [ngSwitch]="futureForecast[0].weather[0].main">
+                    <img *ngSwitchCase="'Clear'" class="img-fluid forecast-icon" src="../../../assets/images/sunny.png" alt="">
+                    <img *ngSwitchCase="'Clouds'" class="img-fluid forecast-icon" src="../../../assets/images/pcloudy.png" alt="">
+
+                    <img *ngSwitchDefault class="img-fluid forecast-icon" src="../../../assets/images/pcloudy.png">
+                </div>
+                </div>
+                <ng-template #nightTime2>
+                    <div [ngSwitch]="futureForecast[0].weather[0].main">
+                        <img *ngSwitchCase="'Clear'" class="img-fluid forecast-icon" src="../../../assets/images/moon.png" alt="">
+                        <img *ngSwitchCase="'Clouds'" class="img-fluid forecast-icon" src="../../../assets/images/pcloudy 0.png" alt="">
+    
+                        <img *ngSwitchDefault class="img-fluid forecast-icon" src="../../../assets/images/pcloudy 0.png">
+                    </div>
+                </ng-template>
+              <h2 class="pt-4">{{ date.main.temp | number : '1.0-0'}}&deg;</h2>
             </div>
         </div>
     </div>
