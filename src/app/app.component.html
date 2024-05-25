@@ -1,2 +1,5 @@
 <app-toolbar (onLocationChange)="showNewLocation($event)" [forecastData]="forecastData"></app-toolbar>
-<app-forecast [forecastData]="forecastData"></app-forecast>
+<div class="pb-4">
+    <app-forecast [forecastData]="forecastData"></app-forecast>
+</div>
+<app-overview></app-overview>
