@@ -5,6 +5,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ForecastService } from './services/forecast.service';
 import { GeocodingService } from './services/geocoding.service';
 import { OverviewComponent } from './components/overview/overview.component';
+import { CurrentWeatherService } from './services/current-weather.service';
 
 @Component({
   selector: 'app-root',
@@ -20,9 +21,14 @@ import { OverviewComponent } from './components/overview/overview.component';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private forcastService: ForecastService, private geoService: GeocodingService) {}
+  constructor(
+    private forcastService: ForecastService, 
+    private geoService: GeocodingService,
+    private currentWeatherService: CurrentWeatherService
+  ) {}
   
   forecastData: any
+  currentWeatherData: any
   location = '06084,US'
 
   showNewLocation(event: any) {
@@ -31,10 +37,16 @@ export class AppComponent implements OnInit {
       this.geoService.get(this.location + ",US")
       .subscribe({
         next: (response: any) => {
-          this.forcastService.get(`lat=${response.lat}&lon=${response.lon}&units=imperial`)
+          this.forcastService.get(`lat=${response.lat}&lon=${response.lon}`)
           .subscribe({
             next: (response: any) => {
               this.forecastData = response
+            }
+          })
+          this.currentWeatherService.get(`lat=${response.lat}&lon=${response.lon}`)
+          .subscribe({
+            next: (response: any) => {
+              this.currentWeatherData = response
             }
           })
         }
@@ -47,13 +59,18 @@ export class AppComponent implements OnInit {
     .subscribe(
       {
         next: (response: any) => {
-          this.forcastService.get(`lat=${response.lat}&lon=${response.lon}&units=imperial`)
+          this.forcastService.get(`lat=${response.lat}&lon=${response.lon}`)
           .subscribe(response => {
-            console.log(response)
             this.forecastData = response
+            console.log(this.forecastData)
           })
+          this.currentWeatherService.get(`lat=${response.lat}&lon=${response.lon}`)
+          .subscribe((response: any) => {
+              this.currentWeatherData = response
+              console.log(this.currentWeatherData)
+            })
         }
-        
+                
       })
 
   }

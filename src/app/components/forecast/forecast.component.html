@@ -1,4 +1,4 @@
-<ul class="nav mt-3">
+<ul class="nav">
     <li class="nav-item">
         <a href="#" class="nav-link ps-0">Today</a>
     </li>
@@ -9,18 +9,18 @@
         <a href="#" class="nav-link active">Next 5 Days</a>
     </li>
 </ul>
-<div class="row g-0 mt-4">
+<div class="row g-0 mt-2">
     <div class="col-8 d-flex justify-content-between">
-        <div class="card bg-secondary text-dark rounded-5" style="width: 19rem;">
-            <div class="card-header bg-info rounded-5 rounded-bottom-0 pt-4 d-flex justify-content-between">
-                <h5 class="fw-bold">{{ date?.toLocaleDateString(undefined, {weekday: 'long'}) }}</h5>
-                <h5 class="fw-bold">{{ date?.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }) }}</h5>
+        <div class="card bg-secondary text-dark rounded-5" style="width: 18rem;">
+            <div class="card-header bg-info rounded-5 rounded-bottom-0 pt-3 d-flex justify-content-between">
+                <h5 class="fw-bold">{{ currentWeatherData?.dt * 1000 | date : 'EEEE' }}</h5>
+                <h5 class="fw-bold">{{ (currentWeatherData?.dt + currentWeatherData?.timezone) * 1000  | date : 'shortTime': '+0000' }}</h5>
             </div>
             <div class="card-body">
-                <div class="d-flex justify-content-between py-3 align-items-center">
-                    <h1 class="card-title">{{ forecastData?.list[0].main.temp_min | number : '1.0-0' }}&deg;</h1>
-                    <div *ngIf="forecastData?.list[0].dt < forecastData?.city.sunset; else nightTime">
-                        <div [ngSwitch]="forecastData?.list[0].weather[0].main">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="card-title">{{ currentWeatherData?.main.temp | number : '1.0-0' }}&deg;</h1>
+                    <div *ngIf="currentWeatherData?.dt < currentWeatherData?.sys.sunset; else nightTime">
+                        <div [ngSwitch]="currentWeatherData?.weather.main">
                             <img *ngSwitchCase="'Clear'" class="img-fluid forecast-icon" src="../../../assets/images/sunny.png" alt="">
                             <img *ngSwitchCase="'Clouds'" class="img-fluid forecast-icon" src="../../../assets/images/pcloudy.png">
                             <img *ngSwitchCase="'Thunderstorm'" class="img-fluid forecast-icon" src="../../../assets/images/TStorm.png" alt="">
@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <ng-template #nightTime>
-                        <div [ngSwitch]="forecastData?.list[0].weather[0].main">
+                        <div [ngSwitch]="currentWeatherData?.weather.main">
                             <img *ngSwitchCase="'Clear'" class="img-fluid forecast-icon" src="../../../assets/images/moon.png" alt="">
                             <img *ngSwitchCase="'Clouds'" class="img-fluid forecast-icon" src="../../../assets/images/mcloudy 0.png">
                             <img *ngSwitchCase="'Thunderstorm'" class="img-fluid forecast-icon" src="../../../assets/images/Tstorm 0.png" alt="">
@@ -36,29 +36,29 @@
                         </div>
                     </ng-template>
                 </div>
-                <div class="mt-2 d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="card-text mb-0">Feels like <span class="fw-bold">{{ forecastData?.list[0].main.feels_like | number : '1.0-0'}}&deg;</span></p>
-                        <p class="card-text mb-0">Wind {{ forecastData?.list[0].wind.deg }}&deg; <span class="fw-bold">{{ forecastData?.list[0].wind.speed }}m/h</span></p>
-                        <p class="card-text mb-0">Pressure <span class="fw-bold">{{ forecastData?.list[0].main.pressure * .02952998057228486 | number : '1.0-2'}}in</span></p>
-                        <p class="card-text mb-0">Humidity <span class="fw-bold">{{ forecastData?.list[0].main.humidity }}&percnt;</span></p>
+                        <p class="card-text mb-0">Feels like <span class="fw-bold">{{ currentWeatherData?.main.feels_like | number : '1.0-0'}}&deg;</span></p>
+                        <p class="card-text mb-0">Wind {{ currentWeatherData?.wind.deg }}&deg; <span class="fw-bold">{{ currentWeatherData?.wind.speed }}m/h</span></p>
+                        <p class="card-text mb-0">Pressure <span class="fw-bold">{{ currentWeatherData?.main.pressure * .02952998057228486 | number : '1.0-2'}}in</span></p>
+                        <p class="card-text mb-0">Humidity <span class="fw-bold">{{ currentWeatherData?.main.humidity }}&percnt;</span></p>
                     </div>
                     <div>
                         <p class="card-text mb-0">Sunrise <span class="fw-bold" *ngIf="forecastData">
-                            {{ forecastData.city.sunrise * 1000 | date : 'shortTime' }}
+                            {{ (forecastData.city.sunrise + forecastData.city.timezone) * 1000 | date : 'shortTime' : '+0000' }}
                         </span></p>
-                        <p class="card-text mb-0" *ngIf="forecastData">Sunset <span class="fw-bold">{{ forecastData.city.sunset * 1000 | date : 'shortTime' }}</span></p>
+                        <p class="card-text mb-0" *ngIf="forecastData">Sunset <span class="fw-bold">{{ (forecastData.city.sunset + forecastData.city.timezone) * 1000 | date : 'shortTime': '+0000' }}</span></p>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div *ngFor="let date of futureForecast" class="card rounded-5 text-center bg-primary pt-4" style="width: 10rem;">
+        <div *ngFor="let date of futureForecast" class="card rounded-5 text-center bg-primary pt-3" style="width: 8rem;">
             <h5 class="text-uppercase">
-                {{ date.dt*1000 | date:'E' }}
+                {{ ( date.dt + forecastData?.city.timezone )*1000 | date:'E' }}
             </h5>
-            <hr>
-            <div class="card-body">
+            <hr class="my-2">
+            <div class="card-body d-flex flex-column justify-content-between">
                 <div *ngIf="forecastData?.list[0].dt < forecastData?.city.sunset; else nightTime2">
                 <div [ngSwitch]="futureForecast[0].weather[0].main">
                     <img *ngSwitchCase="'Clear'" class="img-fluid forecast-icon" src="../../../assets/images/sunny.png" alt="">
@@ -75,7 +75,7 @@
                         <img *ngSwitchDefault class="img-fluid forecast-icon" src="../../../assets/images/pcloudy 0.png">
                     </div>
                 </ng-template>
-              <h2 class="pt-4">{{ date.main.temp | number : '1.0-0'}}&deg;</h2>
+              <h2 class="pt-3">{{ date.main.temp | number : '1.0-0'}}&deg;</h2>
             </div>
         </div>
     </div>

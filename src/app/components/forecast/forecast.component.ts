@@ -21,6 +21,9 @@ export class ForecastComponent implements OnChanges {
   @Input()
   forecastData?: any
 
+  @Input()
+  currentWeatherData?: any
+
   futureForecast: any[] = []
 
   ngOnChanges(changes: SimpleChanges): void {
