@@ -11,6 +11,6 @@ export class DataService {
   constructor(private http: HttpClient, @Inject(String) private url: string) { }
 
   get(params: string){
-    return this.http.get(this.url + params + '&appid=' + this.key)
+    return this.http.get(this.url + params + '&appid=' + this.key + '&units=imperial')
   }
 }
