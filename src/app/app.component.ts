@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   
   forecastData: any
   currentWeatherData: any
-  location = '06084,US'
+  location = '06074,US'
 
   showNewLocation(event: any) {
     if(event){
